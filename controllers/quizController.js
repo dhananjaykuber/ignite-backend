@@ -50,7 +50,7 @@ const getQuiz = async (req, res) => {
 
     res.status(200).json(random);
   } catch (error) {
-    res.status(500).res.json({ error: 'Error occured while getting quiz.' });
+    res.status(500).json({ error: 'Error occured while getting quiz.' });
   }
 };
 
@@ -73,7 +73,7 @@ const addQuiz = async (req, res) => {
 
     res.status(200).json(quiz);
   } catch (error) {
-    res.status(500).res.json({ error: 'Error occured while adding question' });
+    res.status(500).json({ error: 'Error occured while adding question' });
   }
 };
 
@@ -90,7 +90,7 @@ const submitQuiz = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).res.json({ error: 'Cannot update quiz' });
+    res.status(500).json({ error: 'Cannot update quiz' });
   }
 };
 

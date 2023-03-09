@@ -13,9 +13,9 @@ app.use(express.json());
 app.use(cors());
 
 // routes
-app.use('/api/quiz', quizRoute);
-app.use('/api/admin', adminRoute);
-app.use('/api/category', categoryRoute);
+app.use('/apinode/quiz', quizRoute);
+app.use('/apinode/admin', adminRoute);
+app.use('/apinode/category', categoryRoute);
 
 // connect mongodb
 mongoose
