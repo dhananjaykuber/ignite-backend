@@ -21,7 +21,11 @@ const getQuiz = async (req, res) => {
           .json({ error: 'You have already attempted the quiz.' });
       }
 
-      const quiz = await Question.find({ _id: { $in: exist.questions } });
+      let quiz = [];
+      for (const question in exist.questions) {
+        const ques = await Question.findById(exist.questions[question]);
+        quiz.push(ques);
+      }
 
       return res.status(200).json(quiz);
     }
@@ -45,7 +49,7 @@ const getQuiz = async (req, res) => {
       score: 0,
       time: 0,
       questions,
-      answers: [],
+      answers: new Array(questions.length).fill(''),
     });
 
     res.status(200).json(random);
@@ -80,12 +84,12 @@ const addQuiz = async (req, res) => {
 const submitQuiz = async (req, res) => {
   const { category } = req.params;
 
-  const { name, email, contact, answers } = req.body;
+  const { name, email, contact, index, option } = req.body;
 
   try {
     const user = await User.updateOne(
       { name, email, contact, category },
-      { $set: { answers: answers } }
+      { $set: { [`answers.${index}`]: option } }
     );
 
     res.status(200).json(user);
@@ -102,7 +106,7 @@ const increaseTime = async (req, res) => {
   try {
     const user = await User.updateOne(
       { name, email, contact, category },
-      { $inc: { time: 30 } }
+      { $inc: { time: 5 } }
     );
 
     res.status(200).json(user);
@@ -128,4 +132,99 @@ const endQuiz = async (req, res) => {
   }
 };
 
-module.exports = { getQuiz, addQuiz, submitQuiz, increaseTime, endQuiz };
+const getAnswers = async (req, res) => {
+  const { category } = req.params;
+
+  const { name, email, contact } = req.body;
+
+  try {
+    const user = await User.findOne({ name, email, contact, category }).select(
+      'answers'
+    );
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Cannot get answers' });
+  }
+};
+
+const getTime = async (req, res) => {
+  const { category } = req.params;
+
+  const { name, email, contact } = req.body;
+
+  try {
+    const user = await User.findOne({ name, email, contact, category }).select(
+      'time'
+    );
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Cannot get time' });
+  }
+};
+
+const calculateScores = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const users = await User.find({ category: category });
+
+    for (const user in users) {
+      const tempUser = users[user];
+
+      let answers = [];
+      for (const question in tempUser.questions) {
+        const ans = await Question.findById(tempUser.questions[question]);
+        answers.push(ans.answer);
+      }
+
+      const userAnswers = tempUser.answers;
+
+      let score = 0;
+      for (const ans in answers) {
+        if (answers[ans] === userAnswers[ans]) {
+          score++;
+        }
+      }
+
+      const updated = await User.updateOne(
+        {
+          name: tempUser.name,
+          email: tempUser.email,
+          contact: tempUser.contact,
+          category,
+        },
+        { $set: { score: score } }
+      );
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Cannot update scores' });
+  }
+};
+
+const getTotalTime = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const cat = await Category.findOne({ name: category }).select('time');
+
+    res.status(200).json(cat);
+  } catch (error) {
+    res.status(500).json({ error: 'Cannot get time' });
+  }
+};
+
+module.exports = {
+  getQuiz,
+  addQuiz,
+  submitQuiz,
+  increaseTime,
+  endQuiz,
+  getAnswers,
+  getTime,
+  calculateScores,
+  getTotalTime,
+};

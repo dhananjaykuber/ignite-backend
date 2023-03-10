@@ -5,9 +5,16 @@ const {
   submitQuiz,
   increaseTime,
   endQuiz,
+  getAnswers,
+  getTime,
+  calculateScores,
+  getTotalTime,
 } = require('../controllers/quizController');
 
 const router = express.Router();
+
+// get answers
+router.post('/get-answers/:category', getAnswers);
 
 // get quiz
 router.post('/get-quiz/:category', getQuiz);
@@ -21,7 +28,16 @@ router.post('/submit-quiz/:category', submitQuiz);
 // increase time
 router.post('/increase-time/:category', increaseTime);
 
-// increase time
+// get time
+router.post('/get-time/:category', getTime);
+
+// end exam
 router.post('/end-quiz/:category', endQuiz);
+
+// calculate scores
+router.post('/calculate-scores/:category', calculateScores);
+
+// get time of quiz
+router.get('/get-total-time/:category', getTotalTime);
 
 module.exports = router;

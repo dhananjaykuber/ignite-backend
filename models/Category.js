@@ -7,6 +7,7 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
+  time: Number,
   questions: [String],
 });
 
