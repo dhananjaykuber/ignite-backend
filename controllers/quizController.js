@@ -106,7 +106,7 @@ const increaseTime = async (req, res) => {
   try {
     const user = await User.updateOne(
       { name, email, contact, category },
-      { $inc: { time: 5 } }
+      { $inc: { time: 30 } }
     );
 
     res.status(200).json(user);
@@ -118,12 +118,12 @@ const increaseTime = async (req, res) => {
 const endQuiz = async (req, res) => {
   const { category } = req.params;
 
-  const { name, email, contact } = req.body;
+  const { name, email, contact, time } = req.body;
 
   try {
     const user = await User.updateOne(
       { name, email, contact, category },
-      { $set: { submitted: true } }
+      { $set: { submitted: true, time: time } }
     );
 
     res.status(200).json(user);
@@ -217,6 +217,20 @@ const getTotalTime = async (req, res) => {
   }
 };
 
+const getEntries = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const users = await User.find({ category: category })
+      .select('-questions')
+      .select('-answers');
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Cannot get entries' });
+  }
+};
+
 module.exports = {
   getQuiz,
   addQuiz,
@@ -227,4 +241,5 @@ module.exports = {
   getTime,
   calculateScores,
   getTotalTime,
+  getEntries,
 };

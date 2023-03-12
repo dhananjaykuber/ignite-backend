@@ -9,6 +9,7 @@ const categorySchema = new Schema({
   },
   time: Number,
   questions: [String],
+  live: Boolean,
 });
 
 module.exports = mongoose.model('Category', categorySchema);

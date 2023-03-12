@@ -9,6 +9,7 @@ const {
   getTime,
   calculateScores,
   getTotalTime,
+  getEntries,
 } = require('../controllers/quizController');
 
 const router = express.Router();
@@ -39,5 +40,8 @@ router.post('/calculate-scores/:category', calculateScores);
 
 // get time of quiz
 router.get('/get-total-time/:category', getTotalTime);
+
+// get all entries
+router.get('/get-entries/:category', getEntries);
 
 module.exports = router;
