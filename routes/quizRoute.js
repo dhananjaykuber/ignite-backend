@@ -10,6 +10,7 @@ const {
   calculateScores,
   getTotalTime,
   getEntries,
+  deleteQuiz,
 } = require('../controllers/quizController');
 
 const router = express.Router();
@@ -43,5 +44,8 @@ router.get('/get-total-time/:category', getTotalTime);
 
 // get all entries
 router.get('/get-entries/:category', getEntries);
+
+// delete quiz
+router.delete('/delete-quiz/:category', deleteQuiz);
 
 module.exports = router;

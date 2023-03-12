@@ -17,11 +17,15 @@ app.use('/apinode/quiz', quizRoute);
 app.use('/apinode/admin', adminRoute);
 app.use('/apinode/category', categoryRoute);
 
+app.get('/', (req, res) => {
+  res.json({ message: 'hello' });
+});
+
 // connect mongodb
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT, '0.0.0.0', () => {
       console.log(`Server listening on port ${process.env.PORT}`);
     });
   })

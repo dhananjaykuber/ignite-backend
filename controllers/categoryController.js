@@ -1,4 +1,6 @@
 const Category = require('../models/Category');
+const Question = require('../models/Question');
+const User = require('../models/User');
 
 const addCategory = async (req, res) => {
   const { category } = req.params;
@@ -26,7 +28,7 @@ const checkLive = async (req, res) => {
 
     res.status(200).json({ live: live.live });
   } catch (error) {
-    res.status(500).json({ error: 'Error occured' });
+    res.status(500).json({ error: `Error occured: ${error}` });
   }
 };
 
@@ -39,7 +41,7 @@ const getAllCaletgories = async (req, res) => {
 
     res.status(200).json(categories);
   } catch (error) {
-    res.status(500).json({ error: 'Error occured' });
+    res.status(500).json({ error: `Error occured: ${error}` });
   }
 };
 
@@ -73,8 +75,49 @@ const setLive = async (req, res) => {
 
     res.status(200).json({ message: 'Live set to true' });
   } catch (error) {
-    res.status(500).json({ error: 'Error occured' });
+    res.status(500).json({ error: `Error occured: ${error}` });
   }
 };
 
-module.exports = { addCategory, checkLive, getAllCaletgories, setLive };
+const getQuestions = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const quiz = await Category.findOne({ name: category });
+
+    let questions = [];
+    for (const question in quiz.questions) {
+      const ques = await Question.findById(quiz.questions[question]);
+      questions.push(ques);
+    }
+
+    return res.status(200).json(questions);
+  } catch (error) {
+    res.status(500).json({ error: `Error occured: ${error}` });
+  }
+};
+
+const calculateResult = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const entries = await User.find({ category: category });
+
+    entries.sort((a, b) => a.time - b.time);
+
+    entries.sort((a, b) => b.score - a.score);
+
+    res.status(200).json(entries);
+  } catch (error) {
+    res.status(500).json({ error: `Error occured: ${error}` });
+  }
+};
+
+module.exports = {
+  addCategory,
+  checkLive,
+  getAllCaletgories,
+  setLive,
+  getQuestions,
+  calculateResult,
+};

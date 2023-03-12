@@ -106,7 +106,7 @@ const increaseTime = async (req, res) => {
   try {
     const user = await User.updateOne(
       { name, email, contact, category },
-      { $inc: { time: 30 } }
+      { $inc: { time: 10 } }
     );
 
     res.status(200).json(user);
@@ -175,7 +175,9 @@ const calculateScores = async (req, res) => {
 
       let answers = [];
       for (const question in tempUser.questions) {
-        const ans = await Question.findById(tempUser.questions[question]);
+        const ans = await Question.findById(
+          tempUser.questions[question]
+        ).select('answer');
         answers.push(ans.answer);
       }
 
@@ -201,6 +203,7 @@ const calculateScores = async (req, res) => {
 
     res.status(200).json(users);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Cannot update scores' });
   }
 };
@@ -231,6 +234,28 @@ const getEntries = async (req, res) => {
   }
 };
 
+const deleteQuiz = async (req, res) => {
+  const { category } = req.params;
+  const { id } = req.query;
+
+  try {
+    const cat = await Category.updateOne(
+      { name: category },
+      {
+        $pull: {
+          questions: id,
+        },
+      }
+    );
+
+    const quiz = await Question.deleteOne({ _id: id });
+
+    res.status(200).json({ message: 'Deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Cannot delete quiz' });
+  }
+};
+
 module.exports = {
   getQuiz,
   addQuiz,
@@ -242,4 +267,5 @@ module.exports = {
   calculateScores,
   getTotalTime,
   getEntries,
+  deleteQuiz,
 };
