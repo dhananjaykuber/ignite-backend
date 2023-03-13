@@ -23,14 +23,16 @@ const getQuiz = async (req, res) => {
 
       let quiz = [];
       for (const question in exist.questions) {
-        const ques = await Question.findById(exist.questions[question]);
+        const ques = await Question.findById(exist.questions[question]).select(
+          '-answer'
+        );
         quiz.push(ques);
       }
 
       return res.status(200).json(quiz);
     }
 
-    const quiz = await Question.find({ category });
+    const quiz = await Question.find({ category }).select('-answer');
 
     const shuffled = quiz.sort(() => 0.5 - Math.random());
 
