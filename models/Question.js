@@ -16,6 +16,10 @@ const questionSchema = new Schema({
     type: String,
     required: true,
   },
+  adminId: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Question', questionSchema);

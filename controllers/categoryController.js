@@ -12,6 +12,7 @@ const addCategory = async (req, res) => {
       questions: [],
       time: time,
       live: false,
+      adminId: req.admin._id,
     });
 
     res.status(200).json(cat);
@@ -34,7 +35,7 @@ const checkLive = async (req, res) => {
 
 const getAllCaletgories = async (req, res) => {
   try {
-    const categories = await Category.find()
+    const categories = await Category.find({ adminId: req.admin._id })
       .select('name')
       .select('time')
       .select('live');
@@ -49,7 +50,10 @@ const setLive = async (req, res) => {
   const { category } = req.params;
 
   try {
-    const cat = await Category.findOne({ name: category }).select('live');
+    const cat = await Category.findOne({
+      name: category,
+      adminId: req.admin._id,
+    }).select('live');
 
     if (cat.live) {
       const live = await Category.updateOne(
@@ -101,7 +105,9 @@ const calculateResult = async (req, res) => {
   const { category } = req.params;
 
   try {
-    const entries = await User.find({ category: category });
+    const entries = await User.find({
+      category: category,
+    });
 
     entries.sort((a, b) => a.time - b.time);
 

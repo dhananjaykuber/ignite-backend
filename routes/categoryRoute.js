@@ -7,14 +7,15 @@ const {
   getQuestions,
   calculateResult,
 } = require('../controllers/categoryController');
+const { adminAuth } = require('../middleware/adminMiddleware');
 
 const router = express.Router();
 
 // add new category
-router.post('/:category', addCategory);
+router.post('/:category', adminAuth, addCategory);
 
 // get all categories
-router.get('/get-all-categories', getAllCaletgories);
+router.get('/get-all-categories', adminAuth, getAllCaletgories);
 
 // check quiz is live
 router.get('/check-live/:category', checkLive);
@@ -23,9 +24,9 @@ router.get('/check-live/:category', checkLive);
 router.get('/get-questions/:category', getQuestions);
 
 // set test live
-router.put('/set-live/:category', setLive);
+router.put('/set-live/:category', adminAuth, setLive);
 
 // calculate final result
-router.get('/calculate-result/:category', calculateResult);
+router.get('/calculate-result/:category', adminAuth, calculateResult);
 
 module.exports = router;

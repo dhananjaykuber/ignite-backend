@@ -10,6 +10,10 @@ const categorySchema = new Schema({
   time: Number,
   questions: [String],
   live: Boolean,
+  adminId: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Category', categorySchema);

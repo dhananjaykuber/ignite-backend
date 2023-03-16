@@ -12,6 +12,7 @@ const {
   getEntries,
   deleteQuiz,
 } = require('../controllers/quizController');
+const { adminAuth } = require('../middleware/adminMiddleware');
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.post('/get-answers/:category', getAnswers);
 router.post('/get-quiz/:category', getQuiz);
 
 // add quiz
-router.post('/add-quiz/:category', addQuiz);
+router.post('/add-quiz/:category', adminAuth, addQuiz);
 
 // submit quiz
 router.post('/submit-quiz/:category', submitQuiz);
@@ -43,9 +44,9 @@ router.post('/calculate-scores/:category', calculateScores);
 router.get('/get-total-time/:category', getTotalTime);
 
 // get all entries
-router.get('/get-entries/:category', getEntries);
+router.get('/get-entries/:category', adminAuth, getEntries);
 
 // delete quiz
-router.delete('/delete-quiz/:category', deleteQuiz);
+router.delete('/delete-quiz/:category', adminAuth, deleteQuiz);
 
 module.exports = router;

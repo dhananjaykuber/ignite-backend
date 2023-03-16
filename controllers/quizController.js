@@ -70,6 +70,7 @@ const addQuiz = async (req, res) => {
       question,
       options,
       answer,
+      adminId: req.admin._id,
     });
 
     const cat = await Category.updateOne(
