@@ -52,7 +52,6 @@ const setLive = async (req, res) => {
   try {
     const cat = await Category.findOne({
       name: category,
-      adminId: req.admin._id,
     }).select('live');
 
     if (cat.live) {

@@ -24,7 +24,7 @@ router.get('/check-live/:category', checkLive);
 router.get('/get-questions/:category', getQuestions);
 
 // set test live
-router.put('/set-live/:category', adminAuth, setLive);
+router.put('/set-live/:category', setLive);
 
 // calculate final result
 router.get('/calculate-result/:category', adminAuth, calculateResult);

@@ -32,11 +32,20 @@ const getQuiz = async (req, res) => {
       return res.status(200).json(quiz);
     }
 
+    // quiz count
+    const aptitude = 3;
+    const bugbounty = 2;
+
     const quiz = await Question.find({ category }).select('-answer');
 
     const shuffled = quiz.sort(() => 0.5 - Math.random());
 
-    const random = shuffled.slice(0, 3);
+    let random;
+    if (category === 'aptitude') {
+      random = shuffled.slice(0, aptitude);
+    } else {
+      random = shuffled.slice(0, bugbounty);
+    }
 
     let questions = [];
     random.map((shuff) => {
