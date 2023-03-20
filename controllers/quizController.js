@@ -33,8 +33,8 @@ const getQuiz = async (req, res) => {
     }
 
     // quiz count
-    const aptitude = 10;
-    const bugbounty = 10;
+    const aptitude = 30;
+    const bugbounty = 15;
 
     const quiz = await Question.find({ category }).select('-answer');
 
